@@ -5,6 +5,7 @@ import json
 import sqlalchemy
 import pandas as pd
 
+### Definitions
 
 def connect_to_sql_db_url(sql_config):
     """Connect to a SQL server instance with SQLAlchemy & return engine
@@ -40,7 +41,8 @@ def call_sql_stored_procedure(sql_engine, sp_name):
         print('\n----------- Stored Procedure: ', sp_name, ' ! ERROR : ', e)
         raise
 
-# Configuration
+### Configuration
+
 sql_config = sqlalchemy.engine.URL.create(
     "mysql",
     username="codetest",
@@ -51,6 +53,8 @@ sql_config = sqlalchemy.engine.URL.create(
 
 data_folder = "/data/"
 
+### Load Data
+
 # Connect to the database
 mysql_engine = connect_to_sql_db_url(sql_config)
 
@@ -59,3 +63,10 @@ df_place = pd.read_csv(filepath_or_buffer = data_folder + 'places.csv', delimite
 df_place = df_place.drop_duplicates(['city', 'county', 'country'])
 df_place.to_sql(name = 'stg_d_city', con = mysql_engine, if_exists = 'replace') 
 call_sql_stored_procedure(mysql_engine, 'spUpsert_dwh_d_city')
+
+### Upsert names from people.csv to dwh_d_full_name
+df_name = pd.read_csv(filepath_or_buffer = data_folder + 'people.csv', delimiter = ',', header='infer')
+df_name = df_name[['given_name', 'family_name']].drop_duplicates(['given_name', 'family_name'])
+df_name.to_sql(name = 'stg_d_full_name', con = mysql_engine, if_exists = 'replace') 
+call_sql_stored_procedure(mysql_engine, 'spUpsert_dwh_d_full_name')
+
