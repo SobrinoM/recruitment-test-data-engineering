@@ -1,5 +1,5 @@
 .DS_Store
 data/example_python.json
-images/solution-python-dataloader/load_csv.ipynb
+images/solution-python/load_csv.ipynb
 .vscode/*
 *.pyc

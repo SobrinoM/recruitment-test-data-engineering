@@ -24,10 +24,10 @@ services:
     volumes:
       - ./data:/data
 
-  solution-python-dataloader:
-    image: solution-python-dataloader
-    build: images/solution-python-dataloader
-    command: ["./load_csv.py"]
+  solution-python:
+    image: solution-python
+    build: images/solution-python
+    command: ["./solution.py"]
     volumes:
       - ./data:/data
 
