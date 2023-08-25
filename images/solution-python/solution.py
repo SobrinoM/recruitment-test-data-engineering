@@ -50,6 +50,17 @@ q_name_map = """
 df_name_map = pd.read_sql(q_name_map, mysql_engine)
 df_natality = df_natality.merge(df_name_map, on=["given_name", "family_name"])
 
-### Write to SQL
+# Write to SQL
 df_natality = df_natality[["fk_date_of_birth", "fk_full_name", "fk_city"]]
 df_natality.to_sql("dwh_f_l1_natality", mysql_engine, if_exists="append", index=False)
+
+### Output Query to JSON File
+json_file_natality = cfg.data_folder + "natality_per_city.json"
+select_query_natality = """
+SELECT country
+	,count(*) AS births
+FROM dwh_d_city d
+LEFT JOIN dwh_f_l1_natality f ON d.pk_city = f.fk_city
+GROUP BY country
+"""   
+sql_records_to_json_file(json_file_natality, select_query_natality, mysql_engine )
