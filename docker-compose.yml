@@ -24,6 +24,14 @@ services:
     volumes:
       - ./data:/data
 
+  solution-python:
+    image: solution-python
+    build: images/solution-python
+    command: ["./solution.py"]
+    volumes:
+      - ./data:/data
+
+
   # example-c:
   #   image: example-c
   #   build: images/example-c
