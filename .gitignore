@@ -2,3 +2,4 @@
 data/example_python.json
 images/solution-python-dataloader/load_csv.ipynb
 .vscode/*
+*.pyc
