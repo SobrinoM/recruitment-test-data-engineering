@@ -3,3 +3,4 @@ data/example_python.json
 images/solution-python/load_csv.ipynb
 .vscode/*
 *.pyc
+data/natality_per_city.json

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sqlalchemy
+import pandas as pd
 import sys
 
 ### Definitions
@@ -25,8 +26,8 @@ def call_sql_stored_procedure(sql_engine, sp_name):
     """Use a SqlAlchemy engine to trigger a stored procedure.
 
     Args:
-        sql_engine (sqlalchemy.engine.base.Engine): connection to a SQL DB
-        sp_name (string): name of the stored procedure
+        sql_engine (sqlalchemy.engine.base.Engine): SQL connection
+        sp_name (string): stored procedure name
     """
     try:
         connection = sql_engine.raw_connection()
@@ -38,3 +39,17 @@ def call_sql_stored_procedure(sql_engine, sp_name):
     except Exception as e:
         print("\n----------- Stored Procedure: ", sp_name, " ! ERROR : ", e)
         sys.exit(1)
+
+
+def sql_records_to_json_file(output_path, query, engine):
+    """Output the result of a sql query to a json file
+
+    Args:
+        output_path (string): path to json file
+        query (string): sql query
+        engine (sqlalchemy.engine.base.Engine): SQL connection
+    """
+
+    df_query = pd.read_sql(query, engine)
+    df_query.to_json(output_path, orient="records")
+    return
