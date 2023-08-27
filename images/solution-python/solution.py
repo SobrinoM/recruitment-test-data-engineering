@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-import csv
-import json
-import sqlalchemy
 import pandas as pd
-from utilities import *
+from utilities import (
+    connect_to_sql_db_url, 
+    call_sql_stored_procedure, 
+    sql_records_to_json_file
+    )
 import config as cfg
 
 
@@ -35,7 +36,7 @@ df_natality["fk_date_of_birth"] = (
 
 q_place_map = """
     SELECT  pk_city AS fk_city
-        	,city
+            ,city
     FROM dwh_d_city
 """
 df_place_map = pd.read_sql(q_place_map, mysql_engine)
@@ -43,8 +44,8 @@ df_natality = df_natality.merge(df_place_map, left_on="place_of_birth", right_on
 
 q_name_map = """
     SELECT  pk_full_name AS fk_full_name
-	        ,given_name
-	        ,family_name
+            ,given_name
+            ,family_name
     FROM dwh_d_full_name
 """
 df_name_map = pd.read_sql(q_name_map, mysql_engine)
@@ -55,7 +56,7 @@ df_natality = df_natality[["fk_date_of_birth", "fk_full_name", "fk_city"]]
 df_natality.to_sql("dwh_f_l1_natality", mysql_engine, if_exists="append", index=False)
 
 ### Output Query to JSON File
-json_file_natality = cfg.data_folder + "natality_per_city.json"
+json_file_natality = cfg.data_folder + "summary_output.json"
 select_query_natality = """
 SELECT country
 	,count(*) AS births
