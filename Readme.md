@@ -118,7 +118,7 @@ In each case, the programme loads data from the data/example.csv file into that 
 A solution example is given written in Python. This solution uses the popular pandas library for data manipulation.  
 The script can be excecuted with:
 ```
-docker compuse run solution-python
+docker compose run solution-python
 ```
 which loads the data/people.csv and data/places.csv files into the database, and export data from the database into a JSON file in the data folder.
 
