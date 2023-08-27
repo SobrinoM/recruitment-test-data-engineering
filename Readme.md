@@ -27,7 +27,10 @@ We have provided a Github repo containing:
 
 - A **docker compose.yml** file that configures a container for the MySQL database, and the example scripts’ containers.
 - An **images** folder containing example programmes showing how the database can be accessed from C, Node, Python, R, Ruby, and Swift.
-- An **example_schema.sql** file containing a table schema used by the example scripts.
+- A **mysql_scripts** folder containing .sql scripts files that will be excecuted during the startup of the MySQL database:
+  - **script_000_init.sql** file containing a logging table that tracks which sql scripts have been excecuted.    
+  - **script_001_example_schema.sql** file containing a table schema used by the example scripts.
+  - The other **script_\*.sql** files contain the the table schema used by the solution script.
 - A **data** folder containing four files:
   - **example.csv** A tiny dataset, used by the example scripts.
   - **places.csv** 113 rows, where each row has a city, county, and country name.
@@ -39,7 +42,7 @@ We have provided a Github repo containing:
 There are a sequence of steps that we would like you to complete. We hope this won't take more than a couple of hours of your time.
 
 1. Fork the git repo to your own Github account.
-2. Devise a database schema to hold the data in the people and places CSV files, and apply it to the MySQL database. You may apply this schema via a script, via the MySQL command-line client, or via a GUI client.
+2. Devise a database schema to hold the data in the people and places CSV files, and apply it to the MySQL database. You may apply this schema via  placing the scripts in the mysql_scripts folder, via the MySQL command-line client, or via a GUI client.
 3. Create a Docker image for loading the CSV files, places.csv and people.csv, into the tables you have created in the database. Make sure the appropriate config is in the docker compose file. Your data ingest process can be implemented in any way that you like, as long as it runs within a Docker container. You may implement this via programme code in a language of your choice, or via the use of ETL tools.
 4. Create a Docker image for outputting a summary of content in the database. You may implement this using a programming language of your choice. The output must be in JSON format, and be written to a file in the data folder called **data/summary_output.json**. It should consist of a list of the countries, and a count of how many people were born in that country. We have supplied a sample output **data/sample_output.json** to compare your file against.
 5. Share a link to your cloned github repo with us so we can review your code ahead of your interview.
@@ -99,13 +102,7 @@ docker compose run database mysql --host=database --user=codetest --password=swo
 
 We have provided example code written in C, Node, Python, R, Ruby, and Swift. These show how to use a programme in a separate Docker container to connect to the database, using an ORM library where appropriate, to load data from a CSV file, and to query data to output as a JSON file. There should be regarded as illustrative; it is fine to use any of these examples as the basis of your own solution, but we would prefer that you use technologies that you feel comfortable with.
 
-Make sure the MySQL database is running, and then load the example schema with:
-
-```
-docker compose run --no-TTY database mysql --host=database --user=codetest --password=swordfish codetest <example_schema.sql
-```
-
-Then make sure that the containers have been built with `docker compose build` and run one or more of the sample programmes with:
+Make sure that the containers have been built with `docker compose build` and run one or more of the sample programmes with:
 
 ```
 docker compose run example-c
@@ -117,6 +114,14 @@ docker compose run example-swift
 ```
 
 In each case, the programme loads data from the data/example.csv file into that table, and exports data from the database table to a JSON file in the data folder. Note that the scripts do not truncate the table, so each one you run will add additional content.
+
+A solution example is given written in Python. This solution uses the popular pandas library for data manipulation.  
+The script can be excecuted with:
+```
+docker compuse run solution-python
+```
+which loads the data/people.csv and data/places.csv files into the database, and export data from the database into a JSON file in the data folder.
+
 
 ### Cleaning up
 
